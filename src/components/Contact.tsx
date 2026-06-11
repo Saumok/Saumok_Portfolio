@@ -199,7 +199,7 @@ export default function Contact({ unlocked }: { unlocked: boolean }) {
                 n: "01",
                 icon: GithubIcon,
                 label: "GITHUB",
-                value: "saumok_k",
+                value: "Saumok",
                 href: PERSONAL.github,
               },
               {

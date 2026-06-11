@@ -82,7 +82,8 @@ export default function Navbar() {
 
         <div className="hidden md:block">
           <a
-            href={`mailto:saumokkundu14814@gmail.com?subject=Requesting%20CV%20—%20Saumok%20Kundu`}
+            href="/Saumok_Kundu_Resume_Updated.pdf"
+            download="Saumok_Kundu_Resume.pdf"
             className="neon-btn !px-5 !py-2.5 !text-xs"
           >
             <Download size={14} />
@@ -121,7 +122,8 @@ export default function Navbar() {
           ))}
           <div className="border-t border-white/5 px-8 py-4">
             <a
-              href={`mailto:saumokkundu14814@gmail.com?subject=Requesting%20CV%20—%20Saumok%20Kundu`}
+              href="/Saumok_Kundu_Resume_Updated.pdf"
+              download="Saumok_Kundu_Resume.pdf"
               className="neon-btn w-full !px-5 !py-3 !text-xs"
               onClick={() => setOpen(false)}
             >

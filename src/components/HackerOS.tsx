@@ -85,7 +85,11 @@ export default function HackerOS({
           );
         }
         const offset = prev.length * 28;
-        // Clamp so windows never spawn off-screen on small viewports
+        const vw = window.innerWidth;
+        // README docks right so the icon column stays visible; other windows
+        // spawn clear of the icons. Clamped so nothing opens off-screen.
+        const spawnX =
+          kind === "readme" && vw >= 1024 ? vw - 690 + offset : 260 + offset;
         return [
           ...prev,
           {
@@ -93,7 +97,7 @@ export default function HackerOS({
             title,
             kind,
             featureIndex,
-            x: Math.max(12, Math.min(80 + offset, window.innerWidth - 640)),
+            x: Math.max(12, Math.min(spawnX, vw - 640)),
             y: Math.max(52, Math.min(70 + offset, window.innerHeight - 480)),
             z: ++zCounter,
             minimized: false,
@@ -103,6 +107,12 @@ export default function HackerOS({
     },
     []
   );
+
+  /* Auto-open the project dossier so the desktop is never empty on entry */
+  useEffect(() => {
+    const t = setTimeout(() => openWindow("readme", "README.md"), 900);
+    return () => clearTimeout(t);
+  }, [openWindow]);
 
   const closeWindow = (id: string) =>
     setWindows((prev) => prev.filter((w) => w.id !== id));
@@ -210,15 +220,9 @@ export default function HackerOS({
           return (
             <button
               key={i}
-              onDoubleClick={() => openWindow("feature", f.title, i)}
-              onClick={(e) => {
-                // single click also opens after slight delay UX on touch; dblclick standard on desktop
-                if (e.detail === 1 && "ontouchstart" in window)
-                  openWindow("feature", f.title, i);
-              }}
+              onClick={() => openWindow("feature", f.title, i)}
               className="group flex w-24 cursor-pointer flex-col items-center gap-2 rounded-lg p-3 transition-colors duration-200 hover:bg-white/5"
               aria-label={`Open ${f.title}`}
-              title="Double-click to open"
             >
               <span
                 className="flex h-14 w-14 items-center justify-center rounded-xl border transition-all duration-200 group-hover:scale-105"
@@ -239,14 +243,9 @@ export default function HackerOS({
 
         {/* System icons */}
         <button
-          onDoubleClick={() => openWindow("terminal", "TERMINAL")}
-          onClick={(e) => {
-            if (e.detail === 1 && "ontouchstart" in window)
-              openWindow("terminal", "TERMINAL");
-          }}
+          onClick={() => openWindow("terminal", "TERMINAL")}
           className="group flex w-24 cursor-pointer flex-col items-center gap-2 rounded-lg p-3 transition-colors duration-200 hover:bg-white/5"
           aria-label="Open terminal"
-          title="Double-click to open"
         >
           <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-[#06B6D4]/40 bg-[#06B6D4]/10 transition-all duration-200 group-hover:scale-105" style={{ boxShadow: "0 0 18px rgba(6,182,212,0.15)" }}>
             <TerminalSquare size={24} className="text-[#06B6D4]" />
@@ -255,14 +254,9 @@ export default function HackerOS({
         </button>
 
         <button
-          onDoubleClick={() => openWindow("readme", "README.md")}
-          onClick={(e) => {
-            if (e.detail === 1 && "ontouchstart" in window)
-              openWindow("readme", "README.md");
-          }}
+          onClick={() => openWindow("readme", "README.md")}
           className="group flex w-24 cursor-pointer flex-col items-center gap-2 rounded-lg p-3 transition-colors duration-200 hover:bg-white/5"
           aria-label="Open readme"
-          title="Double-click to open"
         >
           <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/15 bg-white/5 transition-all duration-200 group-hover:scale-105">
             <FileText size={24} className="text-[#94A3B8]" />
@@ -430,8 +424,9 @@ function OSWindowFrame({
         minHeight: win.kind === "terminal" ? 380 : 300,
         maxHeight: "72vh",
         borderColor: "rgba(255,255,255,0.1)",
-        background: "rgba(8,8,24,0.92)",
-        backdropFilter: "blur(20px)",
+        /* near-opaque bg instead of backdrop blur — the blur forced a full
+           repaint of everything behind the window on every cursor move */
+        background: "rgba(8,8,24,0.97)",
         boxShadow: "0 25px 80px rgba(0,0,0,0.6)",
         animation: "win-in 0.3s cubic-bezier(0.34,1.56,0.64,1)",
       }}
@@ -445,17 +440,24 @@ function OSWindowFrame({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       >
+        {/* Padded hit areas — the visible dots are small, the targets are not */}
         <button
           onClick={onClose}
-          className="h-3 w-3 cursor-pointer rounded-full bg-[#EF4444] transition-opacity hover:opacity-70"
+          onPointerDown={(e) => e.stopPropagation()}
+          className="-ml-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-opacity hover:opacity-70"
           aria-label="Close window"
-        />
+        >
+          <span className="h-3 w-3 rounded-full bg-[#EF4444]" />
+        </button>
         <button
           onClick={onMinimize}
-          className="h-3 w-3 cursor-pointer rounded-full bg-[#F59E0B] transition-opacity hover:opacity-70"
+          onPointerDown={(e) => e.stopPropagation()}
+          className="-ml-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full transition-opacity hover:opacity-70"
           aria-label="Minimize window"
-        />
-        <span className="h-3 w-3 rounded-full bg-[#10B981]/40" />
+        >
+          <span className="h-3 w-3 rounded-full bg-[#F59E0B]" />
+        </button>
+        <span className="-ml-1 h-3 w-3 rounded-full bg-[#10B981]/40" />
         <span className="ml-3 font-mono-ui text-[11px] tracking-wider text-[#94A3B8]">
           {win.title}
         </span>
@@ -489,8 +491,26 @@ function OSWindowFrame({
               {project.category} · {project.status}
             </p>
             <p className="mt-4 text-[13.5px] leading-[1.75] text-[#CBD5E1]">
-              {project.oneLiner}
+              {project.description}
             </p>
+
+            {/* Key metrics */}
+            <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {project.metrics.map((m) => (
+                <div
+                  key={m.label}
+                  className="rounded-lg border border-white/8 bg-white/[0.03] px-3 py-2.5"
+                >
+                  <div className="font-mono-ui text-[9.5px] tracking-[0.2em] text-[#64748B]">
+                    {m.label}
+                  </div>
+                  <div className="mt-1 text-[12.5px] font-medium text-white">
+                    {m.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+
             <div className="mt-5">
               <div className="font-mono-ui text-[10px] tracking-[0.25em] text-[#475569]">
                 TECH STACK
@@ -502,6 +522,35 @@ function OSWindowFrame({
                   </span>
                 ))}
               </div>
+            </div>
+
+            {/* Actions */}
+            <div className="mt-6 flex flex-wrap gap-3 border-t border-white/8 pt-5">
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2.5 font-mono-ui text-[11.5px] tracking-[0.1em] transition-all duration-200 hover:-translate-y-0.5"
+                  style={{
+                    borderColor: project.color,
+                    color: project.color,
+                    boxShadow: `0 0 16px ${project.color}33`,
+                  }}
+                >
+                  <ExternalLink size={13} />
+                  OPEN LIVE PROJECT
+                </a>
+              )}
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/20 px-4 py-2.5 font-mono-ui text-[11.5px] tracking-[0.1em] text-[#CBD5E1] transition-all duration-200 hover:-translate-y-0.5 hover:border-white/40 hover:text-white"
+              >
+                <GithubIcon size={13} />
+                VIEW SOURCE
+              </a>
             </div>
           </div>
         )}

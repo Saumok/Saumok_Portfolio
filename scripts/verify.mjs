@@ -58,13 +58,20 @@ await page.screenshot({ path: "verify-shots/05-hallway-door.png" });
 console.log("DOOR HOVER:", doorPos ? `DETECTED @ ${doorPos.x},${doorPos.y}` : "not found in sweep");
 if (doorPos) {
   await page.mouse.click(doorPos.x, doorPos.y);
-  await page.waitForTimeout(2200);
+  // gateway transition plays ~2.7s before the OS opens
+  await page.waitForTimeout(1600);
+  await page.screenshot({ path: "verify-shots/06-gateway.png" });
+  const gw = await page.locator('[role="status"]').count();
+  console.log("GATEWAY:", gw > 0 ? "PLAYING" : "not detected");
+  await page.waitForTimeout(2600);
   await page.screenshot({ path: "verify-shots/06-hacker-os.png" });
   const osOpen = await page.locator("text=EXIT [ESC]").count();
   console.log("HACKER OS:", osOpen > 0 ? "OPENED" : "FAILED TO OPEN");
   if (osOpen > 0) {
-    // open terminal + a feature window
-    await page.dblclick('[aria-label="Open terminal"]');
+    // dossier auto-opens; also open terminal via single click
+    const dossier = await page.locator("text=VIEW SOURCE").count();
+    console.log("AUTO DOSSIER:", dossier > 0 ? "OPEN" : "missing");
+    await page.click('[aria-label="Open terminal"]');
     await page.waitForTimeout(600);
     await page.screenshot({ path: "verify-shots/06b-os-terminal.png" });
     await page.keyboard.press("Escape");

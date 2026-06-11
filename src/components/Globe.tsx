@@ -103,7 +103,13 @@ export default function Globe({
       to: toXYZ(a.to.lat, a.to.lon),
     }));
 
-    let rot = 0.6; // start showing Asia
+    /* Gentle sway instead of a full spin — a continuous rotation carried the
+       pins to the far hemisphere half the time. This keeps Kolkata, Chengdu
+       and Melbourne on the visible side at all times while the globe still
+       feels alive. */
+    const ROT_BASE = 3.3; // hemisphere centered on South/East Asia + Oceania
+    const ROT_AMP = 0.4;
+    let rot = ROT_BASE;
     const draw = (now: number) => {
       raf = requestAnimationFrame(draw);
       if (!running) return;
@@ -113,7 +119,7 @@ export default function Globe({
       const R = Math.min(w, h) * 0.36;
       const cx = w / 2;
       const cy = h / 2;
-      rot += 0.0016;
+      rot = ROT_BASE + Math.sin(now * 0.00022) * ROT_AMP;
 
       ctx.clearRect(0, 0, w, h);
 
@@ -175,11 +181,12 @@ export default function Globe({
         }
       });
 
-      // Pins
-      ctx.font = `${10 * dpr}px monospace`;
+      // Pins — never fully culled; fade if they drift toward the limb
+      ctx.font = `600 ${11 * dpr}px monospace`;
       for (const p of pinXYZ) {
         const { sx, sy, z } = project(p.v);
-        if (z < -0.05) continue;
+        const alpha = z > 0.05 ? 1 : Math.max(0.35, (z + 0.45) / 0.5);
+        ctx.globalAlpha = alpha;
         const pulse = 1 + Math.sin(now / 400) * 0.25;
         ctx.fillStyle = p.color;
         ctx.shadowColor = p.color;
@@ -188,8 +195,9 @@ export default function Globe({
         ctx.arc(sx, sy, 3 * dpr * pulse, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
-        ctx.fillStyle = "rgba(248,250,252,0.85)";
+        ctx.fillStyle = "rgba(248,250,252,0.92)";
         ctx.fillText(p.name.toUpperCase(), sx + 8 * dpr, sy + 3 * dpr);
+        ctx.globalAlpha = 1;
       }
     };
     raf = requestAnimationFrame(draw);
@@ -206,7 +214,7 @@ export default function Globe({
       ref={canvasRef}
       className={`h-full w-full ${className}`}
       role="img"
-      aria-label="Rotating globe showing Kolkata, Chengdu and Melbourne"
+      aria-label="Globe showing Kolkata, Chengdu and Melbourne with live transmission arcs"
     />
   );
 }

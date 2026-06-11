@@ -40,8 +40,8 @@ export default function CustomCursor() {
 
     const loop = () => {
       dot.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
-      rx += (mx - rx) * 0.18;
-      ry += (my - ry) * 0.18;
+      rx += (mx - rx) * 0.3;
+      ry += (my - ry) * 0.3;
       ring.style.transform = `translate(${rx - 16}px, ${ry - 16}px) scale(${hovering ? 1.6 : 1})`;
       ring.style.borderColor = hovering ? "rgba(6,182,212,0.8)" : "rgba(124,58,237,0.6)";
 

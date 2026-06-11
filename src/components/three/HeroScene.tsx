@@ -11,8 +11,17 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
  * panel (artwork extracted from the provided FBX files), with projector beam,
  * scanlines, 3 orbit rings (8s/13s/20s), 2000-particle field, bloom,
  * cursor parallax, click → hologram glitch.
+ *
+ * `lite` mode (mobile): centered character, no bloom pass, fewer particles,
+ * capped DPR, and an idle auto-sway replacing cursor parallax.
  */
-export default function HeroScene({ onReady }: { onReady?: () => void }) {
+export default function HeroScene({
+  onReady,
+  lite = false,
+}: {
+  onReady?: () => void;
+  lite?: boolean;
+}) {
   const mountRef = useRef<HTMLDivElement>(null);
   const readyRef = useRef(onReady);
   useEffect(() => {
@@ -41,14 +50,15 @@ export default function HeroScene({ onReady }: { onReady?: () => void }) {
       alpha: true,
       powerPreference: "high-performance",
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, lite ? 1.75 : 2));
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.1;
     mount.appendChild(renderer.domElement);
 
-    // Character anchor — right of center so the name column stays clear (design.md §8.2)
-    const CX = 1.15;
+    // Character anchor — right of center on desktop so the name column stays
+    // clear (design.md §8.2); centered in lite/mobile mode.
+    const CX = lite ? 0 : 1.15;
 
     // ── Lighting — design.md §7.1 ──
     scene.add(new THREE.AmbientLight(0x0a0a2e, 1.2));
@@ -111,8 +121,8 @@ export default function HeroScene({ onReady }: { onReady?: () => void }) {
       rings.push({ pivot, period: s.period });
     });
 
-    // ── Particle field — 2000 drifting points (design.md §7.4) ──
-    const COUNT = 2000;
+    // ── Particle field — 2000 drifting points (design.md §7.4), 800 in lite ──
+    const COUNT = lite ? 800 : 2000;
     const positions = new Float32Array(COUNT * 3);
     const phases = new Float32Array(COUNT);
     for (let i = 0; i < COUNT; i++) {
@@ -269,16 +279,19 @@ export default function HeroScene({ onReady }: { onReady?: () => void }) {
       }
     );
 
-    // ── Post-processing: bloom ──
-    const composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    const bloom = new UnrealBloomPass(
-      new THREE.Vector2(mount.clientWidth, mount.clientHeight),
-      0.6,
-      0.4,
-      0.85
-    );
-    composer.addPass(bloom);
+    // ── Post-processing: bloom (skipped in lite mode for mobile GPUs) ──
+    let composer: EffectComposer | null = null;
+    if (!lite) {
+      composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      const bloom = new UnrealBloomPass(
+        new THREE.Vector2(mount.clientWidth, mount.clientHeight),
+        0.6,
+        0.4,
+        0.85
+      );
+      composer.addPass(bloom);
+    }
 
     // ── Interaction ──
     const mouse = { x: 0, y: 0 };
@@ -314,7 +327,7 @@ export default function HeroScene({ onReady }: { onReady?: () => void }) {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
-      composer.setSize(w, h);
+      composer?.setSize(w, h);
     };
     window.addEventListener("resize", onResize);
 
@@ -342,10 +355,10 @@ export default function HeroScene({ onReady }: { onReady?: () => void }) {
       pGeo.attributes.position.needsUpdate = true;
 
       if (modelLoaded) {
-        // Hologram idle float + cursor parallax tilt
+        // Hologram idle float + cursor parallax tilt (auto-sway on touch/lite)
         characterGroup.position.y = Math.sin(t * 1.2) * 0.04;
-        const targetRY = mouse.x * 0.22;
-        const targetRX = -mouse.y * 0.08;
+        const targetRY = lite ? Math.sin(t * 0.35) * 0.18 : mouse.x * 0.22;
+        const targetRX = lite ? Math.sin(t * 0.5) * 0.03 : -mouse.y * 0.08;
         characterGroup.rotation.y += (targetRY - characterGroup.rotation.y) * 0.06;
         characterGroup.rotation.x += (targetRX - characterGroup.rotation.x) * 0.06;
 
@@ -378,7 +391,8 @@ export default function HeroScene({ onReady }: { onReady?: () => void }) {
       keyLight.position.x = CX + Math.sin(t * 0.4) * 2.5;
       keyLight.position.z = 3 + Math.cos(t * 0.4) * 1.0;
 
-      composer.render();
+      if (composer) composer.render();
+      else renderer.render(scene, camera);
     };
     loop();
 
@@ -390,7 +404,7 @@ export default function HeroScene({ onReady }: { onReady?: () => void }) {
       window.removeEventListener("pointermove", onPointerMove);
       mount.removeEventListener("click", onClick);
       renderer.dispose();
-      composer.dispose();
+      composer?.dispose();
       scene.traverse((obj) => {
         const mesh = obj as THREE.Mesh;
         if (mesh.geometry) mesh.geometry.dispose();
@@ -403,7 +417,7 @@ export default function HeroScene({ onReady }: { onReady?: () => void }) {
       if (renderer.domElement.parentNode === mount)
         mount.removeChild(renderer.domElement);
     };
-  }, []);
+  }, [lite]);
 
   return <div ref={mountRef} className="absolute inset-0" aria-hidden />;
 }

@@ -19,8 +19,9 @@ export const PERSONAL = {
     period: "2022 – 2026",
     cgpa: 7.86,
   },
-  github: "https://github.com/saumok-k",
-  linkedin: "https://www.linkedin.com/in/saumok",
+  github: "https://github.com/Saumok",
+  linkedin: "https://www.linkedin.com/in/saumok-kundu/",
+  cv: "/Saumok_Kundu_Resume_Updated.pdf",
   bio: `I'm Saumok — an AI/ML architect from Kolkata who builds systems that think, automate, and ship. From offline crop-disease AI for farmers to autonomous B2B outreach engines that work while I sleep, I turn ambitious ideas into production software. Two simultaneous international internships at 20. Seven shipped projects. Always leveling up.`,
 };
 
@@ -28,6 +29,11 @@ export interface Feature {
   icon: string; // lucide icon name key
   title: string;
   points: string[];
+}
+
+export interface ProjectMetric {
+  label: string;
+  value: string;
 }
 
 export interface Project {
@@ -39,6 +45,8 @@ export interface Project {
   color: string;
   colorName: string;
   oneLiner: string;
+  description: string;
+  metrics: ProjectMetric[];
   techStack: string[];
   features: Feature[];
   doorSide: "left" | "right";
@@ -57,6 +65,14 @@ export const PROJECTS: Project[] = [
     colorName: "red",
     oneLiner:
       "An AI-powered, omnichannel CRM designed specifically for real estate agents and brokerages — automating the most time-consuming parts of real estate sales.",
+    description:
+      "LeadsTiq is a full SaaS product, not a demo. Agents record live calls in the browser; the platform transcribes them word-by-word, scores the lead's intent with Llama 3.3, and moves them through a real-time Kanban pipeline, while WhatsApp conversations are mined in the background for budgets, locations and timelines. Subscriptions, role-based access and GPS field tracking make it deployable to an agency on day one.",
+    metrics: [
+      { label: "AI PIPELINE", value: "Call → lead score, no manual entry" },
+      { label: "LEAD SCORING", value: "Hot / Warm / Cold — automatic" },
+      { label: "REALTIME SYNC", value: "Supabase WebSockets" },
+      { label: "MONETIZATION", value: "3-tier Razorpay billing" },
+    ],
     techStack: [
       "Next.js",
       "Python/Flask",
@@ -117,7 +133,7 @@ export const PROJECTS: Project[] = [
     ],
     doorSide: "right",
     doorZ: 8,
-    github: "https://github.com/saumok-k",
+    github: "https://github.com/Saumok",
   },
   {
     id: "krishivision",
@@ -129,6 +145,14 @@ export const PROJECTS: Project[] = [
     colorName: "green",
     oneLiner:
       "A bilingual, offline-first AI agronomist for farmers — uses hybrid edge + cloud AI to diagnose crop diseases instantly, even without internet.",
+    description:
+      "An offline-first AI agronomist that fits in a farmer's pocket. A TensorFlow.js model diagnoses crop disease from a leaf photo entirely on-device — no signal required — then pairs the result with an expert-verified treatment plan from Supabase, so remedies are never hallucinated. Nine languages, a private scan history, and an OTP-secured P2P marketplace round out a genuinely deployable AgriTech product.",
+    metrics: [
+      { label: "ON-DEVICE AI", value: "100% offline inference" },
+      { label: "LANGUAGES", value: "9, incl. Hindi & English" },
+      { label: "REMEDIES", value: "Expert-verified, zero hallucination" },
+      { label: "SECURITY", value: "Supabase RLS + OTP auth" },
+    ],
     techStack: [
       "Next.js 14",
       "TensorFlow.js",
@@ -183,7 +207,7 @@ export const PROJECTS: Project[] = [
     ],
     doorSide: "left",
     doorZ: 16,
-    github: "https://github.com/saumok-k",
+    github: "https://github.com/Saumok",
   },
   {
     id: "cowrite",
@@ -195,6 +219,14 @@ export const PROJECTS: Project[] = [
     colorName: "purple",
     oneLiner:
       "A real-time collaborative note-taking and document workspace where multiple users edit simultaneously — with a built-in doodle pad.",
+    description:
+      "A real-time collaborative workspace where documents, cursors and doodles sync live across every connected editor. Socket.IO keeps text edits and cursor presence instantaneous, debounced auto-save makes data loss impossible, and an integrated doodle pad pins freehand sketches straight into the document. Role-based invitations separate editors from viewers.",
+    metrics: [
+      { label: "SYNC", value: "Instant via Socket.IO" },
+      { label: "AUTOSAVE", value: "500ms debounce, zero loss" },
+      { label: "ROLES", value: "Editor / Viewer invites" },
+      { label: "CANVAS", value: "Doodle-to-document pinning" },
+    ],
     techStack: [
       "Next.js",
       "Express.js",
@@ -251,7 +283,7 @@ export const PROJECTS: Project[] = [
     ],
     doorSide: "right",
     doorZ: 28,
-    github: "https://github.com/saumok-k",
+    github: "https://github.com/Saumok",
   },
   {
     id: "likhitpens",
@@ -263,6 +295,14 @@ export const PROJECTS: Project[] = [
     colorName: "gold",
     oneLiner:
       "A cinematic, Awwwards-level luxury e-commerce website for a premium pen brand established in 1957 — built with pure HTML, CSS, and vanilla JavaScript.",
+    description:
+      "A cinematic e-commerce experience for a pen maker established in 1957 — built with zero frameworks. Pure HTML, CSS and vanilla JavaScript deliver 3D product cards, a live SVG engraving preview that renders your text on the pen as you type, an odometer-style cart, and a parallax heritage story. Proof that craft beats tooling.",
+    metrics: [
+      { label: "FRAMEWORKS", value: "0 — pure vanilla stack" },
+      { label: "ENGRAVING", value: "Live SVG preview as you type" },
+      { label: "HERITAGE", value: "Brand est. 1957" },
+      { label: "CHECKOUT", value: "Multi-step with payment sim" },
+    ],
     techStack: ["HTML5", "Vanilla CSS", "Vanilla JavaScript"],
     features: [
       {
@@ -312,7 +352,7 @@ export const PROJECTS: Project[] = [
     ],
     doorSide: "left",
     doorZ: 36,
-    github: "https://github.com/saumok-k",
+    github: "https://github.com/Saumok",
   },
   {
     id: "agenticbros",
@@ -324,6 +364,14 @@ export const PROJECTS: Project[] = [
     colorName: "steel",
     oneLiner:
       "A zero-cost, autonomous B2B lead generation and cold outreach system — finds businesses, analyzes their weaknesses, writes personalized emails, and sends them automatically while you sleep.",
+    description:
+      "A fully autonomous B2B sales machine that costs nothing to run. Playwright hunts businesses on Google Maps, scrapes their sites, and files them into Google Sheets; Apps Script wakes every five minutes, has Gemini diagnose each website's weaknesses, scores the urgency, writes a personalized cold email and sends it from Gmail — with no human in the loop.",
+    metrics: [
+      { label: "RUNNING COST", value: "$0 / month" },
+      { label: "CADENCE", value: "New leads every 5 min" },
+      { label: "URGENCY SCORE", value: "0–100, AI-assigned" },
+      { label: "HUMAN INPUT", value: "None — fully unattended" },
+    ],
     techStack: [
       "Python",
       "Playwright",
@@ -373,7 +421,7 @@ export const PROJECTS: Project[] = [
     ],
     doorSide: "right",
     doorZ: 48,
-    github: "https://github.com/saumok-k",
+    github: "https://github.com/Saumok",
   },
   {
     id: "yaatraexpress",
@@ -385,6 +433,14 @@ export const PROJECTS: Project[] = [
     colorName: "ocean",
     oneLiner:
       "An Awwwards-level adventure tourism website redesign — Apple-style scroll-driven video scrubbing, cinematic trek showcases, GSAP animations, and premium glassmorphism.",
+    description:
+      "An Awwwards-grade redesign for an adventure tourism brand. The hero scrubs through 100 FFmpeg-extracted video frames as you scroll — the Apple technique — before a GSAP-pinned horizontal showcase walks you through five treks with glass stat cards and WhatsApp booking. Includes real performance engineering: a Lenis double-tick bug, found and fixed.",
+    metrics: [
+      { label: "SCROLL VIDEO", value: "100 frames, canvas-scrubbed" },
+      { label: "TREKS", value: "5 cinematic showcases" },
+      { label: "MOTION", value: "GSAP ScrollTrigger + Lenis" },
+      { label: "STATUS", value: "Delivered to client" },
+    ],
     techStack: ["HTML", "CSS", "JavaScript", "GSAP 3", "Lenis", "FFmpeg", "Lucide Icons"],
     features: [
       {
@@ -436,7 +492,7 @@ export const PROJECTS: Project[] = [
     ],
     doorSide: "left",
     doorZ: 60,
-    github: "https://github.com/saumok-k",
+    github: "https://github.com/Saumok",
   },
   {
     id: "socialpilot",
@@ -448,6 +504,14 @@ export const PROJECTS: Project[] = [
     colorName: "orange",
     oneLiner:
       "An AI-driven social media automation platform that autonomously handles posting, analytics, and engagement across multiple platforms.",
+    description:
+      "An AI social-media operator that plans, writes and posts on its own. OpenAI generates platform-optimized captions and hashtags per network, a FastAPI backend schedules cross-platform publishing, and engagement automation triages comments and DMs so only the conversations that actually need a human reach one.",
+    metrics: [
+      { label: "PLATFORMS", value: "X · Instagram · LinkedIn" },
+      { label: "CONTENT", value: "AI-tuned per platform" },
+      { label: "ANALYTICS", value: "One unified dashboard" },
+      { label: "TRIAGE", value: "AI-prioritized replies" },
+    ],
     techStack: ["FastAPI", "React", "OpenAI API"],
     features: [
       {
@@ -485,7 +549,7 @@ export const PROJECTS: Project[] = [
     ],
     doorSide: "right",
     doorZ: 72,
-    github: "https://github.com/saumok-k",
+    github: "https://github.com/Saumok",
   },
 ];
 
@@ -583,11 +647,20 @@ export const SKILLS: Skill[] = [
   { name: "Scikit-learn", years: 3, proficiency: 82, cluster: "AI/ML" },
   { name: "NumPy", years: 3, proficiency: 88, cluster: "AI/ML" },
   { name: "pandas", years: 3, proficiency: 85, cluster: "AI/ML" },
+  { name: "Gemini API", years: 1, proficiency: 80, cluster: "AI/ML" },
+  { name: "Groq API", years: 1, proficiency: 78, cluster: "AI/ML" },
+  { name: "OpenAI API", years: 1.5, proficiency: 78, cluster: "AI/ML" },
   { name: "Next.js", years: 2, proficiency: 85, cluster: "Web/Full-Stack" },
   { name: "React", years: 2.5, proficiency: 83, cluster: "Web/Full-Stack" },
   { name: "FastAPI", years: 2, proficiency: 80, cluster: "Web/Full-Stack" },
   { name: "Flask", years: 2, proficiency: 80, cluster: "Web/Full-Stack" },
   { name: "HTML/CSS/JS", years: 4, proficiency: 92, cluster: "Web/Full-Stack" },
+  { name: "Tailwind CSS", years: 2, proficiency: 84, cluster: "Web/Full-Stack" },
+  { name: "GSAP", years: 1.5, proficiency: 80, cluster: "Web/Full-Stack" },
+  { name: "Three.js", years: 1, proficiency: 72, cluster: "Web/Full-Stack" },
+  { name: "Socket.IO", years: 1, proficiency: 74, cluster: "Web/Full-Stack" },
+  { name: "Express.js", years: 1.5, proficiency: 76, cluster: "Web/Full-Stack" },
+  { name: "PWA / Service Workers", years: 1, proficiency: 70, cluster: "Web/Full-Stack" },
   { name: "SQL", years: 3, proficiency: 80, cluster: "Data" },
   { name: "Excel (Advanced)", years: 3, proficiency: 75, cluster: "Data" },
   { name: "Data Cleaning", years: 3, proficiency: 82, cluster: "Data" },
@@ -598,6 +671,7 @@ export const SKILLS: Skill[] = [
   { name: "Sensor Integration", years: 1, proficiency: 72, cluster: "Automation/IoT" },
   { name: "IoT Data Collection", years: 1, proficiency: 70, cluster: "Automation/IoT" },
   { name: "Playwright", years: 1, proficiency: 75, cluster: "Automation/IoT" },
+  { name: "Google Apps Script", years: 1, proficiency: 72, cluster: "Automation/IoT" },
   { name: "Git / GitHub", years: 4, proficiency: 88, cluster: "Cloud/Tools" },
   { name: "AWS", years: 1.5, proficiency: 65, cluster: "Cloud/Tools" },
   { name: "Postman", years: 2.5, proficiency: 82, cluster: "Cloud/Tools" },
@@ -627,6 +701,17 @@ export const SKILL_CONNECTIONS: [string, string][] = [
   ["Sensor Integration", "Python"],
   ["AWS", "Supabase"],
   ["Supabase", "Git / GitHub"],
+  ["LLMs", "Gemini API"],
+  ["LLMs", "Groq API"],
+  ["LLMs", "OpenAI API"],
+  ["Next.js", "Tailwind CSS"],
+  ["HTML/CSS/JS", "GSAP"],
+  ["GSAP", "Three.js"],
+  ["Socket.IO", "Express.js"],
+  ["Express.js", "React"],
+  ["Next.js", "PWA / Service Workers"],
+  ["Google Apps Script", "RPA"],
+  ["Playwright", "Google Apps Script"],
 ];
 
 /* Which projects used which skills (derived from project tech stacks) */
@@ -645,6 +730,16 @@ export const SKILL_PROJECTS: Record<string, string[]> = {
   n8n: ["LeadsTiq"],
   RPA: ["The Agentic Bros"],
   "JWT / RBAC": ["LeadsTiq"],
+  "Gemini API": ["KrishiVision", "The Agentic Bros"],
+  "Groq API": ["LeadsTiq", "The Agentic Bros"],
+  "OpenAI API": ["SocialPilot"],
+  "Tailwind CSS": ["KrishiVision", "This Portfolio"],
+  GSAP: ["YaatraExpress", "This Portfolio"],
+  "Three.js": ["This Portfolio"],
+  "Socket.IO": ["Cowrite"],
+  "Express.js": ["Cowrite"],
+  "PWA / Service Workers": ["KrishiVision"],
+  "Google Apps Script": ["The Agentic Bros"],
 };
 
 export interface Certification {

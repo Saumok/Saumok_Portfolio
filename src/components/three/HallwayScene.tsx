@@ -11,20 +11,25 @@ import { PROJECTS } from "@/lib/data";
  */
 export default function HallwayScene({
   progressRef,
+  paused = false,
   onHover,
   onEnter,
 }: {
   progressRef: React.MutableRefObject<number>;
+  /** Stop rendering while the gateway/OS overlays cover the corridor. */
+  paused?: boolean;
   onHover: (projectId: string | null) => void;
   onEnter: (projectId: string) => void;
 }) {
   const mountRef = useRef<HTMLDivElement>(null);
   const onHoverRef = useRef(onHover);
   const onEnterRef = useRef(onEnter);
+  const pausedRef = useRef(paused);
   useEffect(() => {
     onHoverRef.current = onHover;
     onEnterRef.current = onEnter;
-  }, [onHover, onEnter]);
+    pausedRef.current = paused;
+  }, [onHover, onEnter, paused]);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -320,7 +325,7 @@ export default function HallwayScene({
 
     const loop = () => {
       raf = requestAnimationFrame(loop);
-      if (!visible) return;
+      if (!visible || pausedRef.current) return;
       const dt = Math.min(clock.getDelta(), 0.05);
       const t = clock.elapsedTime;
 

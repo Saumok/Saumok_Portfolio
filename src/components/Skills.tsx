@@ -56,21 +56,24 @@ export default function Skills() {
   const nodes = useMemo<Node[]>(() => {
     const rand = mulberry32(20260611);
     const anchors: Record<SkillCluster, { x: number; y: number }> = {
-      "AI/ML": { x: 0.5, y: 0.32 },
-      "Web/Full-Stack": { x: 0.8, y: 0.42 },
-      Programming: { x: 0.22, y: 0.38 },
-      Data: { x: 0.32, y: 0.72 },
-      "Automation/IoT": { x: 0.66, y: 0.74 },
-      "Cloud/Tools": { x: 0.88, y: 0.72 },
+      "AI/ML": { x: 0.5, y: 0.3 },
+      "Web/Full-Stack": { x: 0.82, y: 0.4 },
+      Programming: { x: 0.18, y: 0.34 },
+      Data: { x: 0.28, y: 0.74 },
+      "Automation/IoT": { x: 0.62, y: 0.76 },
+      "Cloud/Tools": { x: 0.89, y: 0.74 },
     };
+    /* Golden-angle spiral per cluster — even spread, no two stars stacked */
+    const clusterCount: Partial<Record<SkillCluster, number>> = {};
     return SKILLS.map((s) => {
       const a = anchors[s.cluster];
-      const ang = rand() * Math.PI * 2;
-      const r = 0.05 + rand() * 0.11;
+      const k = (clusterCount[s.cluster] = (clusterCount[s.cluster] ?? 0) + 1);
+      const ang = k * 2.39996 + rand() * 0.5;
+      const r = 0.035 + Math.sqrt(k) * 0.052 + rand() * 0.015;
       return {
         ...s,
-        x: Math.min(0.95, Math.max(0.05, a.x + Math.cos(ang) * r * 1.3)),
-        y: Math.min(0.92, Math.max(0.08, a.y + Math.sin(ang) * r)),
+        x: Math.min(0.95, Math.max(0.05, a.x + Math.cos(ang) * r * 1.25)),
+        y: Math.min(0.9, Math.max(0.08, a.y + Math.sin(ang) * r * 0.85)),
         phase: rand() * Math.PI * 2,
       };
     });
@@ -93,6 +96,12 @@ export default function Skills() {
     let raf = 0;
     let running = true;
     const dpr = Math.min(window.devicePixelRatio, 2);
+
+    /* CSS vars don't resolve inside ctx.font — read the real family name once */
+    const monoFamily =
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--font-jetbrains")
+        .trim() || '"JetBrains Mono", monospace';
 
     const resize = () => {
       const r = wrap.getBoundingClientRect();
@@ -165,11 +174,17 @@ export default function Skills() {
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Label on lit or large nodes
-        if (lit || n.proficiency >= 85) {
-          ctx.font = `${(lit ? 12 : 10) * dpr}px var(--font-jetbrains), monospace`;
-          ctx.fillStyle = lit ? "#F8FAFC" : "rgba(148,163,184,0.65)";
-          ctx.fillText(n.name, p.x, p.y - r - 8 * dpr);
+        // Labels — readable by default, brighter + larger when lit (FR-004.3)
+        if (lit || n.proficiency >= 70) {
+          const ly = p.y - r - 9 * dpr;
+          ctx.font = `${lit ? "600 " : "500 "}${(lit ? 14 : 12) * dpr}px ${monoFamily}`;
+          /* dark halo so labels stay legible over stars and lines */
+          ctx.strokeStyle = "rgba(5,5,16,0.9)";
+          ctx.lineWidth = 3.5 * dpr;
+          ctx.lineJoin = "round";
+          ctx.strokeText(n.name, p.x, ly);
+          ctx.fillStyle = lit ? "#FFFFFF" : "rgba(214,222,235,0.92)";
+          ctx.fillText(n.name, p.x, ly);
         }
         ctx.globalAlpha = 1;
       }

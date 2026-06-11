@@ -16,7 +16,7 @@ const ctx = await browser.newContext({
 });
 const page = await ctx.newPage();
 await page.addInitScript(() => sessionStorage.setItem("saumok-os-booted", "1"));
-await page.goto("http://localhost:3999", { waitUntil: "networkidle" });
+await page.goto(process.env.BASE_URL || "http://localhost:3100", { waitUntil: "networkidle" });
 await page.waitForTimeout(1500);
 
 const sections = ["hero", "about", "skills", "experience", "projects", "challenge", "contact"];
@@ -48,8 +48,17 @@ await page.evaluate(() => {
 await page.waitForTimeout(1500);
 const card = page.locator('#projects button[aria-label^="Open "]').first();
 await card.tap();
-await page.waitForTimeout(1500);
+// per-project gateway plays first (~2.7s)
+await page.waitForTimeout(1400);
+await page.screenshot({ path: `${OUT}gateway.png` });
+await page.waitForTimeout(2700);
 await page.screenshot({ path: `${OUT}hackeros.png` });
+// close the auto-opened dossier so the icons are reachable on a small screen
+const closeBtn = page.locator('button[aria-label="Close window"]').first();
+if (await closeBtn.count()) {
+  await closeBtn.tap();
+  await page.waitForTimeout(400);
+}
 const icon = page.locator('div[role="dialog"][aria-label*="operating system"] button[aria-label^="Open "]').first();
 await icon.tap();
 await page.waitForTimeout(800);

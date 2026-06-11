@@ -7,6 +7,7 @@ import { GithubIcon } from "./BrandIcons";
 import { PROJECTS, type Project } from "@/lib/data";
 import { useMediaQuery, useInView } from "@/lib/hooks";
 import HackerOS from "./HackerOS";
+import ProjectGateway from "./ProjectGateway";
 
 const HallwayScene = dynamic(() => import("./three/HallwayScene"), { ssr: false });
 
@@ -19,6 +20,7 @@ export default function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
   const progressRef = useRef(0);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [gatewayProject, setGatewayProject] = useState<Project | null>(null);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [depth, setDepth] = useState(0);
 
@@ -40,10 +42,10 @@ export default function Projects() {
     return () => cancelAnimationFrame(raf);
   }, [isDesktop]);
 
-  /* Lock page scroll while OS is open */
+  /* Lock page scroll while the gateway or OS is open */
   useEffect(() => {
     const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
-    if (activeProject) {
+    if (activeProject || gatewayProject) {
       lenis?.stop();
       document.body.style.overflow = "hidden";
     } else {
@@ -54,7 +56,7 @@ export default function Projects() {
       lenis?.start();
       document.body.style.overflow = "";
     };
-  }, [activeProject]);
+  }, [activeProject, gatewayProject]);
 
   const hovered = PROJECTS.find((p) => p.id === hoveredId) ?? null;
 
@@ -64,10 +66,11 @@ export default function Projects() {
         <div className="sticky top-0 h-screen overflow-hidden">
           <HallwayScene
             progressRef={progressRef}
+            paused={!!(activeProject || gatewayProject)}
             onHover={setHoveredId}
             onEnter={(id) => {
               const p = PROJECTS.find((x) => x.id === id);
-              if (p) setActiveProject(p);
+              if (p) setGatewayProject(p);
             }}
           />
 
@@ -146,7 +149,18 @@ export default function Projects() {
           `}</style>
         </div>
       ) : (
-        <MobileProjects onOpen={setActiveProject} />
+        <MobileProjects onOpen={setGatewayProject} />
+      )}
+
+      {/* Per-project gateway transition (FR-006.5 + custom worlds) */}
+      {gatewayProject && (
+        <ProjectGateway
+          project={gatewayProject}
+          onDone={() => {
+            setActiveProject(gatewayProject);
+            setGatewayProject(null);
+          }}
+        />
       )}
 
       {/* Hacker OS */}

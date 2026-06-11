@@ -167,7 +167,8 @@ export default function About() {
               </p>
               <div className="mt-6">
                 <a
-                  href={`mailto:${PERSONAL.email}?subject=Requesting%20CV%20—%20Saumok%20Kundu`}
+                  href={PERSONAL.cv}
+                  download="Saumok_Kundu_Resume.pdf"
                   className="neon-btn !px-5 !py-2.5 !text-xs"
                 >
                   <Download size={14} />
