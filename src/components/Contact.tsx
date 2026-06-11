@@ -177,7 +177,7 @@ export default function Contact({ unlocked }: { unlocked: boolean }) {
 
               {status === "sent" && (
                 <div
-                  className="overflow-hidden whitespace-nowrap border-t border-[#10B981]/30 pt-3 font-mono-ui text-[12px] text-[#10B981]"
+                  className="border-t border-[#10B981]/30 pt-3 font-mono-ui text-[12px] leading-relaxed text-[#10B981]"
                   style={{ animation: "ticker 0.8s steps(40)" }}
                   role="status"
                 >

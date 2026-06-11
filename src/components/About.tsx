@@ -136,7 +136,7 @@ export default function About() {
           {/* Left: bio + stats + globe */}
           <div>
             <div
-              className={`relative scanlines glass-card p-8 transition-all delay-200 duration-700 ${
+              className={`relative scanlines glass-card p-6 md:p-8 transition-all delay-200 duration-700 ${
                 inView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
               }`}
             >
@@ -250,7 +250,7 @@ export default function About() {
           aria-label={`${expanded.title} details`}
         >
           <div
-            className="glass-card relative w-full max-w-[520px] p-8"
+            className="glass-card relative max-h-[85svh] w-full max-w-[520px] overflow-y-auto p-6 md:p-8"
             style={{ animation: "card-fly-in 0.4s cubic-bezier(0.34,1.56,0.64,1)" }}
             onClick={(e) => e.stopPropagation()}
           >

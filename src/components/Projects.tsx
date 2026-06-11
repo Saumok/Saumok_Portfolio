@@ -188,7 +188,7 @@ function MobileProjects({ onOpen }: { onOpen: (p: Project) => void }) {
           <button
             key={p.id}
             onClick={() => onOpen(p)}
-            className={`glass-card interactive group relative w-[300px] shrink-0 snap-center overflow-hidden p-6 text-left transition-all duration-700 ${
+            className={`glass-card interactive group relative w-[min(300px,84vw)] shrink-0 snap-center overflow-hidden p-6 text-left transition-all duration-700 ${
               inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
             }`}
             style={{ transitionDelay: `${i * 80}ms` }}

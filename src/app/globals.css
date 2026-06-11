@@ -60,6 +60,14 @@ body {
   overflow-x: hidden;
 }
 
+a,
+button,
+input,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 ::selection {
   background: rgba(124, 58, 237, 0.45);
   color: #fff;
@@ -311,6 +319,15 @@ body {
   box-shadow:
     0 0 24px rgba(239, 68, 68, 0.3),
     inset 0 0 12px rgba(239, 68, 68, 0.15);
+}
+
+/* iOS Safari zooms into focused inputs below 16px — keep them at 16px on touch */
+@media (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
 }
 
 @media (pointer: fine) {

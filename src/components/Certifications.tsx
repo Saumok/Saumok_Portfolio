@@ -176,7 +176,7 @@ export default function Certifications() {
           aria-modal="true"
         >
           <div
-            className="glass-card w-full max-w-[460px] p-8"
+            className="glass-card max-h-[85svh] w-full max-w-[460px] overflow-y-auto p-6 md:p-8"
             onClick={(e) => e.stopPropagation()}
             style={{ animation: "toast-in 0.35s cubic-bezier(0.34,1.56,0.64,1)" }}
           >

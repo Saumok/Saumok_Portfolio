@@ -284,7 +284,7 @@ export default function Skills() {
               setFilter(null);
               setHighlighted(null);
             }}
-            className={`cursor-pointer rounded-full border px-4 py-1.5 font-mono-ui text-[11px] transition-all duration-200 ${
+            className={`cursor-pointer rounded-full border px-4 py-2 font-mono-ui text-[11px] transition-all duration-200 ${
               filter === null
                 ? "border-white/40 text-white"
                 : "border-white/10 text-[#94A3B8] hover:text-white"
@@ -299,7 +299,7 @@ export default function Skills() {
                 setFilter(filter === c ? null : c);
                 setHighlighted(null);
               }}
-              className="cursor-pointer rounded-full border px-4 py-1.5 font-mono-ui text-[11px] transition-all duration-200"
+              className="cursor-pointer rounded-full border px-4 py-2 font-mono-ui text-[11px] transition-all duration-200"
               style={{
                 borderColor:
                   filter === c ? CLUSTER_COLORS[c] : "rgba(255,255,255,0.1)",
@@ -376,7 +376,7 @@ export default function Skills() {
           aria-label={`${selected.name} skill details`}
         >
           <div
-            className="glass-card relative w-full max-w-[420px] p-8"
+            className="glass-card relative max-h-[85svh] w-full max-w-[420px] overflow-y-auto p-6 md:p-8"
             style={{ animation: "skill-fly-in 0.35s cubic-bezier(0.34,1.56,0.64,1)" }}
             onClick={(e) => e.stopPropagation()}
           >

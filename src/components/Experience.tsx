@@ -15,7 +15,7 @@ function DecryptLine({ text, start, delay }: { text: string; start: boolean; del
   }, [start, delay]);
   const decrypted = useDecrypt(text, go, 18);
   return (
-    <p className="font-mono-ui text-[12.5px] leading-[1.8] text-[#CBD5E1]">
+    <p className="font-mono-ui text-[12.5px] leading-[1.8] text-[#CBD5E1] [overflow-wrap:anywhere]">
       <span className="mr-2 text-[#EF4444]">▸</span>
       {go ? decrypted : ""}
       {!go && <span className="text-[#1e293b]">{"█".repeat(Math.min(text.length, 60))}</span>}
@@ -43,7 +43,7 @@ function ExperienceCard({
   return (
     <div
       ref={ref}
-      className={`glass-card relative overflow-hidden p-8 transition-all duration-700 ${
+      className={`glass-card relative overflow-hidden p-6 md:p-8 transition-all duration-700 ${
         inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
       }`}
       style={{ borderColor: "rgba(239,68,68,0.15)" }}
@@ -51,7 +51,7 @@ function ExperienceCard({
       {/* CLASSIFIED stamp — fades as card reveals (FR-005.5) */}
       <div
         aria-hidden
-        className={`classified-stamp absolute right-8 top-8 text-sm transition-all duration-1000 ${
+        className={`classified-stamp absolute right-4 top-6 text-xs md:right-8 md:top-8 md:text-sm transition-all duration-1000 ${
           revealed ? "scale-[2.2] opacity-0" : "scale-100 opacity-90"
         }`}
       >

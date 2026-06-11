@@ -91,7 +91,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="cursor-pointer text-white md:hidden"
+          className="-mr-3 cursor-pointer p-3 text-white md:hidden"
           onClick={() => setOpen(!open)}
           aria-label={open ? "Close menu" : "Open menu"}
         >
@@ -119,6 +119,16 @@ export default function Navbar() {
               {l.label}
             </button>
           ))}
+          <div className="border-t border-white/5 px-8 py-4">
+            <a
+              href={`mailto:saumokkundu14814@gmail.com?subject=Requesting%20CV%20—%20Saumok%20Kundu`}
+              className="neon-btn w-full !px-5 !py-3 !text-xs"
+              onClick={() => setOpen(false)}
+            >
+              <Download size={14} />
+              Download CV
+            </a>
+          </div>
         </div>
       )}
     </nav>

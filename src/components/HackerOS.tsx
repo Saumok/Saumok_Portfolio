@@ -85,6 +85,7 @@ export default function HackerOS({
           );
         }
         const offset = prev.length * 28;
+        // Clamp so windows never spawn off-screen on small viewports
         return [
           ...prev,
           {
@@ -92,8 +93,8 @@ export default function HackerOS({
             title,
             kind,
             featureIndex,
-            x: Math.min(80 + offset, window.innerWidth - 640),
-            y: Math.min(70 + offset, window.innerHeight - 480),
+            x: Math.max(12, Math.min(80 + offset, window.innerWidth - 640)),
+            y: Math.max(52, Math.min(70 + offset, window.innerHeight - 480)),
             z: ++zCounter,
             minimized: false,
           },
@@ -203,7 +204,7 @@ export default function HackerOS({
       </div>
 
       {/* Desktop icons */}
-      <div className="relative z-10 flex flex-col flex-wrap content-start gap-2 p-5" style={{ height: "calc(100% - 88px)" }}>
+      <div className="relative z-10 flex flex-col flex-wrap content-start gap-2 overflow-x-auto p-5" style={{ height: "calc(100% - 88px)" }}>
         {project.features.map((f, i) => {
           const Icon = ICONS[f.icon] ?? Box;
           return (

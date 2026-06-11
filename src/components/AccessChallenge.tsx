@@ -57,14 +57,14 @@ export default function AccessChallenge({ onUnlock }: { onUnlock: () => void }) 
 
         {/* Progress indicator (FR-008.6) */}
         <div
-          className={`mt-8 flex items-center gap-3 transition-all delay-300 duration-700 ${
+          className={`mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 transition-all delay-300 duration-700 ${
             inView ? "opacity-100" : "opacity-0"
           }`}
         >
           {["TRIVIA", "DEBUG", "ARIA"].map((label, i) => (
-            <div key={label} className="flex items-center gap-3">
+            <div key={label} className="flex items-center gap-2 sm:gap-3">
               <div
-                className={`flex items-center gap-2 rounded-full border px-4 py-1.5 font-mono-ui text-[11px] transition-all duration-500 ${
+                className={`flex items-center gap-2 rounded-full border px-3 py-1.5 font-mono-ui text-[11px] transition-all duration-500 sm:px-4 ${
                   stage > i
                     ? "border-[#10B981]/50 text-[#10B981]"
                     : stage === i
@@ -79,7 +79,8 @@ export default function AccessChallenge({ onUnlock }: { onUnlock: () => void }) 
                 <span>
                   {stage > i ? "✓" : `${i + 1}`}
                 </span>
-                STAGE {i + 1}/3 · {label}
+                <span className="hidden sm:inline">STAGE {i + 1}/3 ·&nbsp;</span>
+                {label}
               </div>
               {i < 2 && <ChevronRight size={14} className="text-[#334155]" />}
             </div>
@@ -162,8 +163,8 @@ function TriviaStage({ onPass }: { onPass: () => void }) {
   };
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between font-mono-ui text-[11px] text-[#475569]">
+    <div className="p-5 sm:p-8">
+      <div className="flex flex-wrap items-center justify-between gap-2 font-mono-ui text-[11px] text-[#475569]">
         <span>INTEL VERIFICATION · QUESTION {qIndex + 1}/{TRIVIA.length}</span>
         <span className="flex gap-1">
           {TRIVIA.map((_, i) => (
@@ -252,7 +253,7 @@ function CodePuzzleStage({ onPass }: { onPass: () => void }) {
   const solved = found.length === CODE_PUZZLE.bugLines.length;
 
   return (
-    <div className="p-8">
+    <div className="p-5 sm:p-8">
       <div className="font-mono-ui text-[11px] text-[#475569]">
         DEBUG PROTOCOL · This function shipped with {CODE_PUZZLE.bugLines.length} bugs.
         Click the {CODE_PUZZLE.bugLines.length} faulty lines. ({found.length}/
