@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SAUMOK.OS — The Architect of Intelligence
 
-## Getting Started
+Cinematic interactive portfolio for Saumok Kundu. Next.js 16 + Three.js + Lenis.
 
-First, run the development server:
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build && npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## The experience
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Chapter | What happens |
+|---|---|
+| Boot | Terminal boot sequence (once per session, any key skips) |
+| Hero | Holographic character projection, orbit rings, 2000-particle field, bloom. Click the hologram. |
+| About | Dossier with character reference render, expanding intel cards, animated stats, rotating data globe |
+| Skills | Interactive constellation map — hover stars, click for dossiers, category filters, challenge terminal |
+| Experience | Classified transmissions that decrypt on scroll + transmission arcs Kolkata⇄Chengdu/Melbourne |
+| Projects | Scroll-driven first-person 3D corridor, 7 glowing doors → each opens a full **Hacker OS** (draggable windows, working terminal — type `./launch_demo`) |
+| Certifications | Achievement-unlock toasts with XP ticker |
+| Access Terminal | 3-stage gamified lock: trivia → debug puzzle → ARIA chatbot (skip link for recruiters) |
+| Contact | Dead-drop terminal → EmailJS (mailto fallback until env vars set) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Mobile (<768px/1024px) swaps WebGL scenes for CSS-animated equivalents and a swipeable project deck.
 
-## Learn More
+## Remaining content hookups
 
-To learn more about Next.js, take a look at the following resources:
+- [ ] `.env.local` from `.env.example` — EmailJS keys (form currently falls back to mailto)
+- [ ] Real GitHub repo URLs per project — `src/lib/data.ts` (`github` fields)
+- [ ] Real LinkedIn URL — `src/lib/data.ts` (`PERSONAL.linkedin`)
+- [ ] CV PDF — drop in `public/cv.pdf` and point the Download CV buttons at it (currently mailto request)
+- [ ] Credential verification URLs — `src/lib/data.ts` certifications
+- [ ] Live URLs for Likhit Pens / SocialPilot when available
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Verification
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+node scripts/verify.mjs         # desktop walkthrough, screenshots → verify-shots/
+node scripts/verify-mobile.mjs  # 375px pass
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Requires the prod server on port 3100 (`npx next start -p 3100`) and Edge installed.
